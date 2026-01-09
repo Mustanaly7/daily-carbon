@@ -119,7 +119,7 @@ const ActivityCard = ({ item, count, onAdd, onRemove }) => {
         </div>
       </div>
 
-      {/* FIXED: Footer Layout */}
+      {/* Footer Layout */}
       <div className="flex items-center gap-2 mt-6 pt-4 border-t border-white/5 w-full">
         
         <button 
@@ -142,7 +142,7 @@ const ActivityCard = ({ item, count, onAdd, onRemove }) => {
           disabled={count === 0}
           className={`flex-1 flex items-center justify-center gap-1.5 px-2 py-2.5 rounded-xl border transition-all min-w-0 ${
             count === 0 
-              ? 'opacity-50 cursor-not-allowed border-slate-700 bg-slate-800/50 text-slate-500' // FIXED: Better disabled visibility
+              ? 'opacity-50 cursor-not-allowed border-slate-700 bg-slate-800/50 text-slate-500' 
               : 'border-slate-700 text-slate-300 hover:bg-red-500/20 hover:border-red-500/50 hover:text-red-400'
           }`}
           aria-label="Decrease count"
@@ -168,14 +168,12 @@ const Dashboard = ({ log }) => {
         cats[item.category] += impact;
       }
     });
-    // Filter categories that have <= 0 impact to prevent PieChart errors
     return { 
       totalCO2: total, 
       categoryData: Object.keys(cats).map(k => ({ name: k, value: cats[k] })).filter(i => i.value > 0) 
     };
   }, [log]);
 
-  // BUG FIX: Handle negative CO2 (Offsets) in display calculations
   const isNetPositive = totalCO2 <= 0; 
   const displayCO2 = Math.abs(totalCO2);
   const carKm = (totalCO2 / 192).toFixed(1);
@@ -184,8 +182,9 @@ const Dashboard = ({ log }) => {
   const COLORS = ['#3B82F6', '#F97316', '#A855F7', '#10B981'];
 
   return (
-    <aside className="h-full bg-gradient-to-b from-slate-900 to-slate-950 border-r border-slate-700/50 shadow-2xl overflow-y-auto flex flex-col">
-      <div className="p-8 flex flex-col h-full gap-8">
+    // Changed: Responsive height (h-auto on mobile, h-full on desktop)
+    <aside className="h-auto lg:h-full bg-gradient-to-b from-slate-900 to-slate-950 border-b lg:border-b-0 lg:border-r border-slate-700/50 shadow-2xl flex flex-col">
+      <div className="p-6 md:p-8 flex flex-col h-full gap-6 md:gap-8">
         
         <div className="flex items-center gap-3 text-emerald-400">
           <div className="w-2.5 h-2.5 bg-emerald-500 rounded-full shadow-[0_0_10px_#10B981] animate-pulse"></div>
@@ -226,7 +225,7 @@ const Dashboard = ({ log }) => {
 
         <div className="flex-grow flex flex-col justify-end min-h-[250px] bg-slate-800/20 rounded-3xl p-4 border border-slate-700/30 backdrop-blur-sm">
            <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4 text-center">Emission Breakdown</h3>
-           <div className="flex-grow relative">
+           <div className="flex-grow relative h-64 lg:h-auto">
             {categoryData.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -315,25 +314,26 @@ const App = () => {
   const categories = ['All', 'Digital', 'Food', 'Transport', 'Home'];
 
   return (
-    <div className="h-screen w-full bg-slate-950 text-slate-200 font-sans flex overflow-hidden">
+    // Changed: min-h-screen, flex-col on mobile, flex-row on desktop
+    <div className="min-h-screen w-full bg-slate-950 text-slate-200 font-sans flex flex-col lg:flex-row">
       
-      {/* LEFT SIDEBAR - Dashboard */}
-      <div className="hidden lg:block w-[400px] flex-shrink-0">
+      {/* DASHBOARD AREA: Mobile (Top Block) | Desktop (Sticky Sidebar) */}
+      <div className="w-full lg:w-[400px] flex-shrink-0 lg:h-screen lg:sticky lg:top-0 lg:overflow-y-auto z-20">
         <Dashboard log={dailyLog} />
       </div>
 
-      {/* RIGHT SIDE - Main Content */}
-      <main className="flex-1 h-full overflow-y-auto bg-gradient-to-br from-slate-950 to-slate-900">
+      {/* MAIN CONTENT */}
+      <main className="flex-1 w-full bg-gradient-to-br from-slate-950 to-slate-900">
         <div className="p-6 md:p-8 lg:p-12 w-full">
           
           <header className="mb-10">
-            <div className="flex items-center gap-4 mb-8">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-8">
               <div className="bg-emerald-500 p-3 rounded-2xl shadow-[0_0_20px_rgba(16,185,129,0.4)] text-white">
                 <Leaf size={32} strokeWidth={2.5} />
               </div>
               <div>
-                <h1 className="text-4xl font-extrabold text-white tracking-tight">CO2 Emission Tracker</h1>
-                <p className="text-slate-400 mt-1 text-lg">Measure the real impact of your daily choices.</p>
+                <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">CO2 Tracker</h1>
+                <p className="text-slate-400 mt-1 text-base sm:text-lg">Measure the real impact of your daily choices.</p>
               </div>
             </div>
 
@@ -344,7 +344,7 @@ const App = () => {
                   <Search className="ml-5 text-slate-500" size={22} />
                   <input 
                     type="text" 
-                    placeholder="Search 50+ activities (e.g. 'Coffee', 'Drive')..." 
+                    placeholder="Search activities..." 
                     className="w-full px-4 py-4 bg-transparent outline-none text-white placeholder:text-slate-600 text-lg"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
@@ -352,7 +352,7 @@ const App = () => {
                 </div>
               </div>
 
-              <div className="flex gap-3 overflow-x-auto pb-2">
+              <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
                 {categories.map(cat => (
                   <button
                     key={cat}
@@ -383,17 +383,17 @@ const App = () => {
               ))
             ) : (
               <div className="col-span-full py-20 text-center opacity-50">
-                 <p className="text-xl">No activities found.</p>
+                  <p className="text-xl">No activities found.</p>
               </div>
             )}
           </div>
 
           <footer className="mt-10 pt-10 border-t border-slate-800/50 flex flex-col sm:flex-row justify-between items-center text-slate-500 text-sm gap-4 w-full">
-             <div className="flex items-center gap-2">
-               <Info size={16} />
-               <span>Data Sources:</span>
-             </div>
-             <p className="opacity-70">Estimates based on OWID & EPA averages.</p>
+              <div className="flex items-center gap-2">
+                <Info size={16} />
+                <span>Data Sources:</span>
+              </div>
+              <p className="opacity-70 text-center sm:text-right">Estimates based on OWID & EPA averages.</p>
           </footer>
         </div>
       </main>
