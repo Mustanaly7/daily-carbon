@@ -119,9 +119,7 @@ const ActivityCard = ({ item, count, onAdd, onRemove }) => {
         </div>
       </div>
 
-      {/* Footer Layout */}
       <div className="flex items-center gap-2 mt-6 pt-4 border-t border-white/5 w-full">
-        
         <button 
           onClick={() => onAdd(item.id)}
           className="flex-1 flex items-center justify-center gap-1.5 px-2 py-2.5 rounded-xl bg-emerald-600 text-white hover:bg-emerald-500 hover:scale-105 active:scale-95 shadow-lg shadow-emerald-900/50 transition-all min-w-0"
@@ -182,7 +180,6 @@ const Dashboard = ({ log }) => {
   const COLORS = ['#3B82F6', '#F97316', '#A855F7', '#10B981'];
 
   return (
-    // Changed: Responsive height (h-auto on mobile, h-full on desktop)
     <aside className="h-auto lg:h-full bg-gradient-to-b from-slate-900 to-slate-950 border-b lg:border-b-0 lg:border-r border-slate-700/50 shadow-2xl flex flex-col">
       <div className="p-6 md:p-8 flex flex-col h-full gap-6 md:gap-8">
         
@@ -314,17 +311,16 @@ const App = () => {
   const categories = ['All', 'Digital', 'Food', 'Transport', 'Home'];
 
   return (
-    // Changed: min-h-screen, flex-col on mobile, flex-row on desktop
-    <div className="min-h-screen w-full bg-slate-950 text-slate-200 font-sans flex flex-col lg:flex-row">
+    <div className="h-screen w-full bg-slate-950 text-slate-200 font-sans flex flex-col lg:flex-row overflow-hidden">
       
-      {/* DASHBOARD AREA: Mobile (Top Block) | Desktop (Sticky Sidebar) */}
-      <div className="w-full lg:w-[400px] flex-shrink-0 lg:h-screen lg:sticky lg:top-0 lg:overflow-y-auto z-20">
+      {/* DASHBOARD AREA */}
+      <div className="w-full lg:w-[400px] flex-shrink-0 lg:h-full overflow-y-auto z-20">
         <Dashboard log={dailyLog} />
       </div>
 
       {/* MAIN CONTENT */}
-      <main className="flex-1 w-full bg-gradient-to-br from-slate-950 to-slate-900">
-        <div className="p-6 md:p-8 lg:p-12 w-full">
+      <main className="flex-1 h-full overflow-y-auto bg-gradient-to-br from-slate-950 to-slate-900">
+        <div className="p-6 md:p-8 lg:p-12">
           
           <header className="mb-10">
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-8">
@@ -370,9 +366,9 @@ const App = () => {
             </div>
           </header>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 min-[1900px]:grid-cols-5 gap-6 pb-20 w-full">
-            {filteredData.length > 0 ? (
-              filteredData.map(item => (
+          {filteredData.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 min-[1900px]:grid-cols-5 gap-6 pb-20">
+              {filteredData.map(item => (
                 <ActivityCard 
                   key={item.id} 
                   item={item} 
@@ -380,15 +376,15 @@ const App = () => {
                   onAdd={addToLog}
                   onRemove={removeFromLog}
                 />
-              ))
-            ) : (
-              <div className="col-span-full py-20 text-center opacity-50">
-                  <p className="text-xl">No activities found.</p>
-              </div>
-            )}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div className="py-20 text-center opacity-50">
+              <p className="text-xl">No activities found.</p>
+            </div>
+          )}
 
-          <footer className="mt-10 pt-10 border-t border-slate-800/50 flex flex-col sm:flex-row justify-between items-center text-slate-500 text-sm gap-4 w-full">
+          <footer className="mt-10 pt-10 border-t border-slate-800/50 flex flex-col sm:flex-row justify-between items-center text-slate-500 text-sm gap-4">
               <div className="flex items-center gap-2">
                 <Info size={16} />
                 <span>Data Sources:</span>
