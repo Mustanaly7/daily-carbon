@@ -122,7 +122,7 @@ const ActivityCard = ({ item, count, onAdd, onRemove }) => {
       <div className="flex items-center gap-2 mt-6 pt-4 border-t border-white/5 w-full">
         <button 
           onClick={() => onAdd(item.id)}
-          className="flex-1 flex items-center justify-center gap-1.5 px-2 py-2.5 rounded-xl bg-emerald-600 text-white hover:bg-emerald-500 hover:scale-105 active:scale-95 shadow-lg shadow-emerald-900/50 transition-all min-w-0"
+          className="flex-1 flex items-center justify-center gap-1.5 px-2 py-2.5 rounded-xl bg-emerald-600 text-white hover:bg-emerald-500 active:scale-95 shadow-lg shadow-emerald-900/50 transition-all min-w-0"
           aria-label="Increase count"
         >
           <Plus size={16} strokeWidth={3} />
@@ -180,8 +180,8 @@ const Dashboard = ({ log }) => {
   const COLORS = ['#3B82F6', '#F97316', '#A855F7', '#10B981'];
 
   return (
-    <aside className="h-auto lg:h-full bg-gradient-to-b from-slate-900 to-slate-950 border-b lg:border-b-0 lg:border-r border-slate-700/50 shadow-2xl flex flex-col">
-      <div className="p-6 md:p-8 flex flex-col h-full gap-6 md:gap-8">
+    <aside className="w-full lg:h-full bg-gradient-to-b from-slate-900 to-slate-950 border-b lg:border-b-0 lg:border-r border-slate-700/50 shadow-2xl">
+      <div className="p-4 sm:p-6 md:p-8 flex flex-col gap-4 sm:gap-6 md:gap-8">
         
         <div className="flex items-center gap-3 text-emerald-400">
           <div className="w-2.5 h-2.5 bg-emerald-500 rounded-full shadow-[0_0_10px_#10B981] animate-pulse"></div>
@@ -220,9 +220,9 @@ const Dashboard = ({ log }) => {
           </div>
         </div>
 
-        <div className="flex-grow flex flex-col justify-end min-h-[250px] bg-slate-800/20 rounded-3xl p-4 border border-slate-700/30 backdrop-blur-sm">
+        <div className="bg-slate-800/20 rounded-3xl p-4 border border-slate-700/30 backdrop-blur-sm">
            <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4 text-center">Emission Breakdown</h3>
-           <div className="flex-grow relative h-64 lg:h-auto">
+           <div className="w-full h-64">
             {categoryData.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -247,7 +247,7 @@ const Dashboard = ({ log }) => {
                 </PieChart>
               </ResponsiveContainer>
             ) : (
-              <div className="absolute inset-0 flex flex-col items-center justify-center text-slate-600 px-4 text-center">
+              <div className="w-full h-full flex flex-col items-center justify-center text-slate-600 px-4 text-center">
                 {totalCO2 < 0 ? (
                   <>
                     <Recycle className="mb-2 text-emerald-500" size={32}/>
@@ -311,16 +311,16 @@ const App = () => {
   const categories = ['All', 'Digital', 'Food', 'Transport', 'Home'];
 
   return (
-    <div className="h-screen w-full bg-slate-950 text-slate-200 font-sans flex flex-col lg:flex-row overflow-hidden">
+    <div className="w-full min-h-screen bg-slate-950 text-slate-200 font-sans lg:flex">
       
       {/* DASHBOARD AREA */}
-      <div className="w-full lg:w-[400px] flex-shrink-0 lg:h-full overflow-y-auto z-20">
+      <div className="w-full lg:w-[400px] lg:flex-shrink-0 lg:fixed lg:left-0 lg:top-0 lg:bottom-0 lg:overflow-y-auto">
         <Dashboard log={dailyLog} />
       </div>
 
       {/* MAIN CONTENT */}
-      <main className="flex-1 h-full overflow-y-auto bg-gradient-to-br from-slate-950 to-slate-900">
-        <div className="p-6 md:p-8 lg:p-12">
+      <main className="w-full lg:ml-[400px] bg-gradient-to-br from-slate-950 to-slate-900 min-h-screen">
+        <div className="w-full p-4 sm:p-6 md:p-8 lg:p-12">
           
           <header className="mb-10">
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-8">
@@ -348,12 +348,12 @@ const App = () => {
                 </div>
               </div>
 
-              <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+              <div className="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0">
                 {categories.map(cat => (
                   <button
                     key={cat}
                     onClick={() => setActiveCategory(cat)}
-                    className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all whitespace-nowrap border ${
+                    className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all whitespace-nowrap border flex-shrink-0 ${
                       activeCategory === cat 
                         ? 'bg-emerald-600 border-emerald-500 text-white shadow-lg shadow-emerald-900/40 transform scale-105' 
                         : 'bg-slate-900 border-slate-800 text-slate-400 hover:bg-slate-800 hover:text-white'
@@ -367,7 +367,7 @@ const App = () => {
           </header>
 
           {filteredData.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 min-[1900px]:grid-cols-5 gap-6 pb-20">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 pb-20">
               {filteredData.map(item => (
                 <ActivityCard 
                   key={item.id} 
